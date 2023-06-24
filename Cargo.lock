@@ -1614,6 +1614,8 @@ dependencies = [
  "librsvg",
  "nix",
  "privdrop",
+ "serde",
+ "toml",
 ]
 
 [[package]]
