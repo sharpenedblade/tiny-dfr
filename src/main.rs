@@ -3,8 +3,8 @@ use cairo::{Context, FontSlant, FontWeight, Format, ImageSurface, Rectangle};
 use drm::control::ClipRect;
 use icon_loader::{IconFileType, IconLoader};
 use image::{
-        DynamicImage, Pixel,
-        imageops::{resize, FilterType},
+    imageops::{resize, FilterType},
+    DynamicImage, Pixel,
 };
 use input::{
     event::{
@@ -76,7 +76,7 @@ impl Button {
         loader.set_theme_name_provider(icon_theme);
         loader.update_theme_name().unwrap();
         let icon_loader = loader.load_icon(icon_name).unwrap();
-        let icon = icon_loader.file_for_size(512);
+        let icon = icon_loader.file_for_size(32);
         let image;
         match icon.icon_type() {
             IconFileType::SVG => {
@@ -121,22 +121,13 @@ impl Button {
                 let x = left_edge + button_width / 2.0 - size / 2.0;
 
                 // Resize the PNG image to match the specified size
-                let resized_png = resize(
-                    png,
-                    size as u32,
-                    size as u32,
-                    FilterType::Lanczos3,
-                );
+                let resized_png = resize(png, size as u32, size as u32, FilterType::Lanczos3);
 
                 // Convert the resized PNG image to a Cairo ImageSurface
-                let png_surface = ImageSurface::create(
-                    Format::ARgb32,
-                    size as i32,
-                    size as i32,
-                ).expect("Failed to create PNG surface");
+                let png_surface = ImageSurface::create(Format::ARgb32, size as i32, size as i32)
+                    .expect("Failed to create PNG surface");
 
-                let png_context = Context::new(&png_surface)
-                    .expect("Failed to create PNG context");
+                let png_context = Context::new(&png_surface).expect("Failed to create PNG context");
 
                 // Iterate over the pixels of the resized PNG image and paint them on the Cairo surface
                 for (x_pixel, y_pixel, pixel) in resized_png.enumerate_pixels() {
@@ -148,12 +139,7 @@ impl Button {
                         b as f64 / 255.0,
                         a as f64 / 255.0,
                     );
-                    let _ = png_context.rectangle(
-                        x_pixel as f64,
-                        y_pixel as f64,
-                        1.0,
-                        1.0,
-                    );
+                    let _ = png_context.rectangle(x_pixel as f64, y_pixel as f64, 1.0, 1.0);
                     let _ = png_context.fill();
                 }
 
