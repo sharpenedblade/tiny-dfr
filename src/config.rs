@@ -4,6 +4,7 @@ use std::{
 };
 use anyhow::Error;
 use cairo::FontFace;
+use crate::Button;
 use crate::FunctionLayer;
 use crate::fonts::{FontConfig, Pattern};
 use freetype::Library as FtLibrary;
